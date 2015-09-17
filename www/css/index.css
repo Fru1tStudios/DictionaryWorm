@@ -18,9 +18,6 @@ body {
   -webkit-user-select: none;
   /* prevent copy paste, to allow, change 'none' to 'text' */ }
 
-.app {
-  background-color: #000; }
-
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1 / 1) and (min-width: 400px) {
   .app {
