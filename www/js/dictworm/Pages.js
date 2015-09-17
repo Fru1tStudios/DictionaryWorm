@@ -1,10 +1,13 @@
-/**
- * Defines the pages within DictionaryWorm
- */
-var Pages = function() {
-	this.something = 1;
+(function(window) {
+	jsPages.Manager.register(
+			"SPLASH",
+			new jsPages.Page()
+					.setHtmlPath("Splash")
+	);
 
-	this.method = function() {
-		console.log(this.something++);
-	}
-};
+	jsPages.Manager.register(
+			"GAME_BOARD",
+			new jsPages.Page()
+					.setHtmlPath("GameBoard")
+	);
+} (window));
