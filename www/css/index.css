@@ -5,10 +5,11 @@
   padding: 0; }
 
 body,
-html {
+html,
+#main,
+#main > div {
   height: 100%;
-  width: 100%;
-  background-color: #EEE; }
+  width: 100%; }
 
 body {
   -webkit-touch-callout: none;
@@ -16,11 +17,17 @@ body {
   -webkit-text-size-adjust: none;
   /* prevent webkit from resizing text to fit */
   -webkit-user-select: none;
-  /* prevent copy paste, to allow, change 'none' to 'text' */ }
+  /* prevent copy paste, to allow, change 'none' to 'text' */
+  background-color: #ECECEC; }
+
+.gameboard.header {
+  height: 20%; }
+.gameboard.play-area {
+  height: 80%; }
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1 / 1) and (min-width: 400px) {
   .app {
-    background-color: #FFF; } }
+    background-color: #ECECEC; } }
 
 /*# sourceMappingURL=index.css.map */
