@@ -1,8 +1,69 @@
+$gameboard-header-height: 25%;
+$gameboard-tile-height: 11%;
+$gameboard-border-width: 1px;
+
 .gameboard {
 	&.header {
-		height: 20%;
+		height: $gameboard-header-height;
 	}
+
 	&.play-area {
-		height: 80%;
+		height: 100% - $gameboard-header-height;
+		font-size: 0;
+		color: $default-color;
+		font-weight: bold;
+
+		.padding,
+		.column {
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+		}
+
+		.padding {
+			width: 1%;
+		}
+		.column {
+			width: 14%;
+
+			&.bordered > div {
+				border-left: $gameboard-border-width solid $default-border-color;
+				border-right: $gameboard-border-width solid $default-border-color;
+			}
+			&.bordered-left > div {
+				border-left: $gameboard-border-width solid $default-border-color;
+			}
+			&.bordered-right > div {
+				border-right: $gameboard-border-width solid $default-border-color;
+			}
+
+			> span {
+				display: block;
+				height: $gameboard-tile-height / 2;
+				border-bottom: $gameboard-border-width solid $default-border-color;
+			}
+			> div {
+				display: inline-block;
+				height: $gameboard-tile-height;
+				width: 100%;
+				vertical-align: middle;
+				font-size: 14px;
+				text-align: center;
+
+				border-bottom: $gameboard-border-width solid $default-border-color;
+				&:nth-child(1) {
+					border-top: $gameboard-border-width solid $default-border-color;
+				}
+
+				&::before {
+					content: '';
+					height: 100%;
+					width: 0;
+					vertical-align: middle;
+					display: inline-block;
+
+				}
+			}
+		}
 	}
 }

@@ -2,7 +2,8 @@
   -webkit-tap-highlight-color: transparent;
   /* make transparent link selection, adjust last value opacity 0 to 1.0 */
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  box-sizing: border-box; }
 
 body,
 html,
@@ -18,16 +19,55 @@ body {
   /* prevent webkit from resizing text to fit */
   -webkit-user-select: none;
   /* prevent copy paste, to allow, change 'none' to 'text' */
-  background-color: #ECECEC; }
+  background-color: #ECF0F1; }
 
 .gameboard.header {
-  height: 20%; }
+  height: 25%; }
 .gameboard.play-area {
-  height: 80%; }
+  height: 75%;
+  font-size: 0;
+  color: #2C3E50;
+  font-weight: bold; }
+  .gameboard.play-area .padding,
+  .gameboard.play-area .column {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle; }
+  .gameboard.play-area .padding {
+    width: 1%; }
+  .gameboard.play-area .column {
+    width: 14%; }
+    .gameboard.play-area .column.bordered > div {
+      border-left: 1px solid #DCE4EC;
+      border-right: 1px solid #DCE4EC; }
+    .gameboard.play-area .column.bordered-left > div {
+      border-left: 1px solid #DCE4EC; }
+    .gameboard.play-area .column.bordered-right > div {
+      border-right: 1px solid #DCE4EC; }
+    .gameboard.play-area .column > span {
+      display: block;
+      height: 5.5%;
+      border-bottom: 1px solid #DCE4EC; }
+    .gameboard.play-area .column > div {
+      display: inline-block;
+      height: 11%;
+      width: 100%;
+      vertical-align: middle;
+      font-size: 14px;
+      text-align: center;
+      border-bottom: 1px solid #DCE4EC; }
+      .gameboard.play-area .column > div:nth-child(1) {
+        border-top: 1px solid #DCE4EC; }
+      .gameboard.play-area .column > div::before {
+        content: '';
+        height: 100%;
+        width: 0;
+        vertical-align: middle;
+        display: inline-block; }
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1 / 1) and (min-width: 400px) {
   .app {
-    background-color: #ECECEC; } }
+    background-color: #ECF0F1; } }
 
 /*# sourceMappingURL=index.css.map */
