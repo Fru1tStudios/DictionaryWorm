@@ -1,4 +1,4 @@
-(function(window) {
+(function() {
 	jsPages.Manager.register(
 			"SPLASH",
 			new jsPages.Page()
@@ -10,4 +10,10 @@
 			new jsPages.Page()
 					.setHtmlPath("GameBoard")
 	);
-} (window));
+
+	jsPages.Manager.register(
+			"MAIN_MENU",
+			new jsPages.Page()
+					.setHtmlPath("MainMenu")
+	);
+} ());

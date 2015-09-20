@@ -1,0 +1,24 @@
+.menu {
+	&.title {
+		height: 25%;
+		text-align: center;
+	}
+
+	&.content {
+		height: 75%;
+		overflow: auto;
+		text-align: center;
+
+		h1 {
+			font-weight: normal;
+			padding: 12px 0;
+		}
+	}
+
+	.divider {
+		height: 1px;
+		background-color: #999;
+		width: 10%;
+		margin: 0 auto;
+	}
+}

@@ -5,6 +5,13 @@
   padding: 0;
   box-sizing: border-box; }
 
+/* latin */
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Raleway"), url(fonts/Raleway.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000; }
 body,
 html,
 #main,
@@ -19,7 +26,36 @@ body {
   /* prevent webkit from resizing text to fit */
   -webkit-user-select: none;
   /* prevent copy paste, to allow, change 'none' to 'text' */
-  background-color: #ECF0F1; }
+  font-family: Raleway, serif;
+  background-color: #ECECEC;
+  color: #2C3E50;
+  font-size: 16px; }
+
+.v-aligner {
+  height: 100%;
+  display: inline-block;
+  width: 0;
+  vertical-align: middle; }
+
+.v-aligned {
+  display: inline-block;
+  vertical-align: middle; }
+
+.menu.title {
+  height: 25%;
+  text-align: center; }
+.menu.content {
+  height: 75%;
+  overflow: auto;
+  text-align: center; }
+  .menu.content h1 {
+    font-weight: normal;
+    padding: 12px 0; }
+.menu .divider {
+  height: 1px;
+  background-color: #999;
+  width: 10%;
+  margin: 0 auto; }
 
 .gameboard.header {
   height: 25%; }
@@ -76,6 +112,6 @@ body {
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1 / 1) and (min-width: 400px) {
   .app {
-    background-color: #ECF0F1; } }
+    background-color: #ECECEC; } }
 
 /*# sourceMappingURL=index.css.map */
