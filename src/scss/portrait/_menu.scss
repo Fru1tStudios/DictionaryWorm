@@ -1,17 +1,25 @@
 .menu {
 	&.title {
-		height: 25%;
+		height: 33%;
 		text-align: center;
 	}
 
 	&.content {
-		height: 75%;
+		height: 67%;
 		overflow: auto;
 		text-align: center;
 
-		h1 {
+		.links {
+			width: 100%;
+		}
+
+		h2 {
 			font-weight: normal;
 			padding: 12px 0;
+
+			&:hover {
+				background-color: #CFCFCF;
+			}
 		}
 	}
 

@@ -42,15 +42,19 @@ body {
   vertical-align: middle; }
 
 .menu.title {
-  height: 25%;
+  height: 33%;
   text-align: center; }
 .menu.content {
-  height: 75%;
+  height: 67%;
   overflow: auto;
   text-align: center; }
-  .menu.content h1 {
+  .menu.content .links {
+    width: 100%; }
+  .menu.content h2 {
     font-weight: normal;
     padding: 12px 0; }
+    .menu.content h2:hover {
+      background-color: #CFCFCF; }
 .menu .divider {
   height: 1px;
   background-color: #999;
