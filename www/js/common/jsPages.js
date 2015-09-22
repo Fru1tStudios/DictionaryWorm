@@ -150,7 +150,7 @@
 							completeTransition();
 						}
 					}
-			)
+			);
 
 			// Close old page
 			if (!!this.currentPage_ && !!this.currentPageNode_) {

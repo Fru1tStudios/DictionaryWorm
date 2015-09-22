@@ -3,7 +3,11 @@
   /* make transparent link selection, adjust last value opacity 0 to 1.0 */
   margin: 0;
   padding: 0;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none; }
 
 /* latin */
 @font-face {
@@ -27,8 +31,8 @@ body {
   -webkit-user-select: none;
   /* prevent copy paste, to allow, change 'none' to 'text' */
   font-family: Raleway, serif;
-  background-color: #ECECEC;
-  color: #2C3E50;
+  background-color: #1F1F1F;
+  color: #6c94b7;
   font-size: 16px; }
 
 .v-aligner {
@@ -66,7 +70,7 @@ body {
 .gameboard.play-area {
   height: 75%;
   font-size: 0;
-  color: #2C3E50;
+  color: #6c94b7;
   font-weight: bold; }
   .gameboard.play-area .padding,
   .gameboard.play-area .column {
@@ -79,33 +83,32 @@ body {
     width: 14%;
     overflow: hidden; }
     .gameboard.play-area .column.bordered > div {
-      border-left: 1px solid #DCE4EC;
-      border-right: 1px solid #DCE4EC; }
+      border-left: 1px solid #003757;
+      border-right: 1px solid #003757; }
     .gameboard.play-area .column.bordered-left > div {
-      border-left: 1px solid #DCE4EC; }
+      border-left: 1px solid #003757; }
     .gameboard.play-area .column.bordered-right > div {
-      border-right: 1px solid #DCE4EC; }
+      border-right: 1px solid #003757; }
     .gameboard.play-area .column.short {
-      height: 88%; }
+      padding: 5.5% 0; }
       .gameboard.play-area .column.short > div {
         height: 12.5%; }
-    .gameboard.play-area .column.tall {
-      height: 99%; }
-      .gameboard.play-area .column.tall > div {
-        height: 11.11111%; }
+    .gameboard.play-area .column.tall > div {
+      height: 11.11111%; }
     .gameboard.play-area .column > span {
       display: block;
       height: 5.5%;
-      border-bottom: 1px solid #DCE4EC; }
+      border-bottom: 1px solid #003757; }
     .gameboard.play-area .column > div {
       display: inline-block;
       width: 100%;
-      vertical-align: middle;
+      vertical-align: bottom;
       font-size: 14px;
       text-align: center;
-      border-bottom: 1px solid #DCE4EC; }
+      height: 99%;
+      border-bottom: 1px solid #003757; }
       .gameboard.play-area .column > div:nth-child(1) {
-        border-top: 1px solid #DCE4EC; }
+        border-top: 1px solid #003757; }
       .gameboard.play-area .column > div::before {
         content: '';
         height: 100%;
@@ -116,6 +119,6 @@ body {
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1 / 1) and (min-width: 400px) {
   .app {
-    background-color: #ECECEC; } }
+    background-color: #1F1F1F; } }
 
 /*# sourceMappingURL=index.css.map */

@@ -40,13 +40,12 @@ $gameboard-border-width: 1px;
 				border-right: $gameboard-border-width solid $default-border-color;
 			}
 			&.short {
-				height: $gameboard-tile-height * $gameboard-short-column;
+				padding: $gameboard-tile-height / 2 0;
 				> div {
 					height: 100% / $gameboard-short-column;
 				}
 			}
 			&.tall {
-				height: $gameboard-tile-height * $gameboard-tall-column;
 				> div {
 					height: 100% / $gameboard-tall-column;
 				}
@@ -60,9 +59,10 @@ $gameboard-border-width: 1px;
 			> div {
 				display: inline-block;
 				width: 100%;
-				vertical-align: middle;
+				vertical-align: bottom;
 				font-size: 14px;
 				text-align: center;
+				height: $gameboard-tile-height * $gameboard-tall-column;
 
 				border-bottom: $gameboard-border-width solid $default-border-color;
 				&:nth-child(1) {
