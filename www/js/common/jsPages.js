@@ -1,7 +1,7 @@
-(function(window) {
+(function() { //stjs
 	const MAIN_ID = "main";
-	const CAPTURE_CLASS = "page-link";
-	const DATA_NAME = "page-link";
+	const JS_PAGES_CLASS = "page-link";
+	const DATA_NAME = "pagelink";
 
 	/**
 	 * jsPages is a library which provides easy organization between single-index websites.
@@ -119,15 +119,16 @@
 				throw id + " is not a valid page id.";
 			}
 
-			/** @type {!HTMLElement} */
-			var newPageContainer = document.createElement("div");
+			/** @type {?String} */
+			var newPageContent__ = null;
 			/** @type {!boolean} */
-			var isOldPageClosed = false;
-			/** @type {!boolean} */
-			var isNewPageLoaded = false;
-			/** @type {function()} */
-			var completeTransition = function() {
-				if (!isOldPageClosed || !isNewPageLoaded) {
+			var isOldPageClosed__ = false;
+			/**
+			 * @param {!boolean} isOldPageClosed
+			 * @param {?String} newPageContent
+			 */
+			var completeTransition = function(isOldPageClosed, newPageContent) {
+				if (!isOldPageClosed || !newPageContent) {
 					return;
 				}
 
@@ -135,19 +136,44 @@
 				while (main.firstChild) {
 					main.removeChild(main.firstChild);
 				}
-				main.appendChild(newPageContainer);
-				jsPages.Utility.setPageLinks();
-				nextPage.animateOpen(newPageContainer);
+
+				var parser = new DOMParser();
+				var newPage = parser.parseFromString(newPageContent, "text/html");
+				var newPageEls = newPage.body.getElementsByTagName("*");
+				var contentWrapper = document.createElement("div");
+				while (newPageEls.length > 0) {
+					var el = newPageEls.item(0);
+					contentWrapper.appendChild(el);
+				}
+
+				// Add to page
+				main.appendChild(contentWrapper);
+				jsPages.Utility.setElementLinks(contentWrapper);
+				nextPage.animateOpen(contentWrapper);
+
+				// Handle imbedded javascript
+				var jsEls = contentWrapper.getElementsByTagName('script');
+				while (jsEls.length > 0) {
+					var jsNode = jsEls.item(0);
+					var newJsEl = document.createElement("script");
+					if (!!jsNode.src) {
+						newJsEl.src = jsNode.src;
+					} else {
+						newJsEl.text = jsNode.textContent;
+					}
+					contentWrapper.removeChild(jsNode); // Removes from jsEls
+					document.head.appendChild(newJsEl); // Executes script
+					document.head.removeChild(newJsEl); // Clean up
+				}
 			};
 
 			// Load page
 			$.ajax(
-					jsPages.Utility.getFullUrl(nextPage),
+					jsPages.Utility.getFullUrl(nextPage) + "?time=" + Date.now(),
 					{
 						success: function(data) {
-							newPageContainer.innerHTML = data;
-							isNewPageLoaded = true;
-							completeTransition();
+							newPageContent__ = data;
+							completeTransition(isOldPageClosed__, newPageContent__);
 						}
 					}
 			);
@@ -155,12 +181,12 @@
 			// Close old page
 			if (!!this.currentPage_ && !!this.currentPageNode_) {
 				this.currentPage_.animateClose(this.currentPageNode_, function() {
-					isOldPageClosed = true;
-					completeTransition();
+					isOldPageClosed__ = true;
+					completeTransition(isOldPageClosed__, newPageContent__);
 				});
 			} else {
-				isOldPageClosed = true;
-				completeTransition();
+				isOldPageClosed__ = true;
+				completeTransition(isOldPageClosed__, newPageContent__);
 			}
 		},
 
@@ -191,13 +217,22 @@
 			return "pages/" + page.getHtmlPath() + ".html";
 		},
 
-		setPageLinks: function() {
-			$('.' + CAPTURE_CLASS).click(function() {
-				jsPages.Manager.open($(this).attr('data-' + DATA_NAME));
-			});
+		/**
+		 * Set the given element's jsPage links to the proper redirection.
+		 *
+		 * @param {!HTMLElement} element The element to process.
+		 */
+		setElementLinks: function(element) {
+			//noinspection JSUnresolvedFunction
+			var linkEls = element.getElementsByClassName(JS_PAGES_CLASS);
+			for (var i = 0; i < linkEls.length; i++) {
+				linkEls.item(i).addEventListener('click', function() {
+					jsPages.Manager.open(this.dataset[DATA_NAME]);
+				});
+			}
 		}
 	};
 
 	// Add to window
 	window.jsPages = jsPages;
-} (window));
+} ());

@@ -1,8 +1,13 @@
 $gameboard-header-height: 25%;
+
+$gameboard-column-width: 14%;
+$gameboard-padding-width: 1%;
 $gameboard-tile-height: 11%;
-$gameboard-short-column: 8;
-$gameboard-tall-column: 9;
-$gameboard-border-width: 1px;
+
+$gameboard-short-rows: 8;
+$gameboard-tall-rows: 9;
+
+$gameboard-tile-font-size: 16px;
 
 .gameboard {
 	&.header {
@@ -11,73 +16,73 @@ $gameboard-border-width: 1px;
 
 	&.play-area {
 		height: 100% - $gameboard-header-height;
-		font-size: 0;
-		color: $default-color;
-		font-weight: bold;
+		font-size: 0; // Css trick for display: inline-block elements
+		padding-bottom: 3px; // Game board padding for bottom edge
 
-		.padding,
-		.column {
+		// All columns and column padding
+		> div {
 			display: inline-block;
-			height: 100%;
-			vertical-align: middle;
+			vertical-align: bottom;
 		}
 
-		.padding {
-			width: 1%;
-		}
+		// All columns
 		.column {
-			width: 14%;
+			width: $gameboard-column-width;
+			font-size: initial;
 			overflow: hidden;
+			border-bottom: 1px solid $default-border-color;
 
-			&.bordered > div {
-				border-left: $gameboard-border-width solid $default-border-color;
-				border-right: $gameboard-border-width solid $default-border-color;
-			}
-			&.bordered-left > div {
-				border-left: $gameboard-border-width solid $default-border-color;
-			}
-			&.bordered-right > div {
-				border-right: $gameboard-border-width solid $default-border-color;
-			}
-			&.short {
-				padding: $gameboard-tile-height / 2 0;
-				> div {
-					height: 100% / $gameboard-short-column;
-				}
-			}
-			&.tall {
-				> div {
-					height: 100% / $gameboard-tall-column;
-				}
-			}
-
-			> span {
-				display: block;
-				height: $gameboard-tile-height / 2;
-				border-bottom: $gameboard-border-width solid $default-border-color;
-			}
+			// All Tiles
 			> div {
-				display: inline-block;
-				width: 100%;
-				vertical-align: bottom;
-				font-size: 14px;
 				text-align: center;
-				height: $gameboard-tile-height * $gameboard-tall-column;
-
-				border-bottom: $gameboard-border-width solid $default-border-color;
-				&:nth-child(1) {
-					border-top: $gameboard-border-width solid $default-border-color;
-				}
+				vertical-align: middle;
+				border-top: 1px solid $default-border-color;
 
 				&::before {
 					content: '';
-					height: 100%;
 					width: 0;
-					vertical-align: middle;
+					height: 100%;
 					display: inline-block;
-
+					vertical-align: middle;
 				}
 			}
+
+			// Tall columns
+			&:nth-child(odd) {
+				height: $gameboard-tile-height * $gameboard-tall-rows;
+				border-left: 1px solid $default-border-color;
+				border-right: 1px solid $default-border-color;
+
+				// All tall column tiles
+				> div {
+					height: 100% / $gameboard-tall-rows;
+				}
+			}
+
+			// Short columns
+			&:nth-child(even) {
+				height: $gameboard-tile-height * $gameboard-short-rows;
+				margin: $gameboard-tile-height / 2 0;
+
+				// All short column tiles
+				> div {
+					height: 100% / $gameboard-short-rows;
+				}
+			}
+
+			// First column
+			&:nth-child(2) {
+				border-left: 1px solid $default-border-color;
+			}
+
+			// Last column
+			&:nth-last-child(2) {
+				border-right: 1px solid $default-border-color;
+			}
+		}
+		.padding {
+			width: $gameboard-padding-width;
+			height: 100%;
 		}
 	}
 }

@@ -1,11 +1,11 @@
 <div class="gameboard header">
-
+hi
 </div>
 <div class="gameboard play-area">
 	<div class="padding"></div>
 
 	<!-- Column 1 -->
-	<div class="column short bordered-left">
+	<div class="column">
 		<div>10</div>
 		<div>9</div>
 		<div>8</div>
@@ -19,7 +19,7 @@
 	</div>
 
 	<!-- Column 2 -->
-	<div class="column tall bordered">
+	<div class="column">
 		<div>I</div>
 		<div>J</div>
 		<div>K</div>
@@ -32,7 +32,7 @@
 	</div>
 
 	<!-- Column 3 -->
-	<div class="column short">
+	<div class="column">
 		<div>A</div>
 		<div>B</div>
 		<div>C</div>
@@ -44,7 +44,7 @@
 	</div>
 
 	<!-- Column 4 -->
-	<div class="column tall bordered">
+	<div class="column">
 		<div>I</div>
 		<div>J</div>
 		<div>K</div>
@@ -57,7 +57,7 @@
 	</div>
 
 	<!-- Column 5 -->
-	<div class="column short">
+	<div class="column">
 		<div>A</div>
 		<div>B</div>
 		<div>C</div>
@@ -69,7 +69,7 @@
 	</div>
 
 	<!-- Column 6 -->
-	<div class="column tall bordered">
+	<div class="column">
 		<div>I</div>
 		<div>J</div>
 		<div>K</div>
@@ -82,7 +82,7 @@
 	</div>
 
 	<!-- Column 7 -->
-	<div class="column short bordered-right">
+	<div class="column">
 		<div>A</div>
 		<div>B</div>
 		<div>C</div>
@@ -95,3 +95,12 @@
 
 	<div class="padding"></div>
 </div>
+
+<script type="text/javascript">
+	(function() {
+		var columns = document.getElementsByClassName('column');
+		for (var i = 0; i < columns.length; i++) {
+			columns[i].scrollTop = 999999999;
+		}
+	} ());
+</script>

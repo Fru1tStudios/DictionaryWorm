@@ -70,51 +70,43 @@ body {
 .gameboard.play-area {
   height: 75%;
   font-size: 0;
-  color: #6c94b7;
-  font-weight: bold; }
-  .gameboard.play-area .padding,
-  .gameboard.play-area .column {
+  padding-bottom: 3px; }
+  .gameboard.play-area > div {
     display: inline-block;
-    height: 100%;
-    vertical-align: middle; }
-  .gameboard.play-area .padding {
-    width: 1%; }
+    vertical-align: bottom; }
   .gameboard.play-area .column {
     width: 14%;
-    overflow: hidden; }
-    .gameboard.play-area .column.bordered > div {
-      border-left: 1px solid #003757;
-      border-right: 1px solid #003757; }
-    .gameboard.play-area .column.bordered-left > div {
-      border-left: 1px solid #003757; }
-    .gameboard.play-area .column.bordered-right > div {
-      border-right: 1px solid #003757; }
-    .gameboard.play-area .column.short {
-      padding: 5.5% 0; }
-      .gameboard.play-area .column.short > div {
-        height: 12.5%; }
-    .gameboard.play-area .column.tall > div {
-      height: 11.11111%; }
-    .gameboard.play-area .column > span {
-      display: block;
-      height: 5.5%;
-      border-bottom: 1px solid #003757; }
+    font-size: initial;
+    overflow: hidden;
+    border-bottom: 1px solid #003757; }
     .gameboard.play-area .column > div {
-      display: inline-block;
-      width: 100%;
-      vertical-align: bottom;
-      font-size: 14px;
       text-align: center;
-      height: 99%;
-      border-bottom: 1px solid #003757; }
-      .gameboard.play-area .column > div:nth-child(1) {
-        border-top: 1px solid #003757; }
+      vertical-align: middle;
+      border-top: 1px solid #003757; }
       .gameboard.play-area .column > div::before {
         content: '';
-        height: 100%;
         width: 0;
-        vertical-align: middle;
-        display: inline-block; }
+        height: 100%;
+        display: inline-block;
+        vertical-align: middle; }
+    .gameboard.play-area .column:nth-child(odd) {
+      height: 99%;
+      border-left: 1px solid #003757;
+      border-right: 1px solid #003757; }
+      .gameboard.play-area .column:nth-child(odd) > div {
+        height: 11.11111%; }
+    .gameboard.play-area .column:nth-child(even) {
+      height: 88%;
+      margin: 5.5% 0; }
+      .gameboard.play-area .column:nth-child(even) > div {
+        height: 12.5%; }
+    .gameboard.play-area .column:nth-child(2) {
+      border-left: 1px solid #003757; }
+    .gameboard.play-area .column:nth-last-child(2) {
+      border-right: 1px solid #003757; }
+  .gameboard.play-area .padding {
+    width: 1%;
+    height: 100%; }
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1 / 1) and (min-width: 400px) {

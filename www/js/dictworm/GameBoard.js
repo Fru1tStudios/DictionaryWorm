@@ -1,29 +1,26 @@
 (function(window) {
 	var GameBoard = {};
 
-	GameBoard.Tile = function(position) {
-		/** @type {!number} */
-		this.position;
+	/**
+	 * Represents a gameboard tile (letter). Each tile represents a single letter on the board.
+	 * The tile object will never change letters, and thus, be destroyed when the letter on the
+	 * game board is used.
+	 *
+	 * @param {!HTMLElement} element The element this tile is.
+	 * @constructor
+	 */
+	GameBoard.Tile = function(element) {
 		/** @type {!HTMLElement} */
-		this.element;
+		this.element_ = element;
 
 		/**
-		 * Specifies a new game board tile that is part of a game board.
+		 * Animates this tile out with the given function that must handle the callback.
 		 *
-		 * @param {!HTMLElement} element The html element that corresponds to this tile.
+		 * @param {!function(!HTMLElement, !function())} fn
+		 * @param {!function()} callback
 		 */
-		this.constructor = function(element) {
-			this.position = -1;
-		};
-		this.constructor(position);
-
-		/**
-		 * Sets this tile's position to the given value.
-		 *
-		 * @param {!number} position The position of this tile.
-		 */
-		this.setPosition = function(position) {
-			this.position = position;
+		this.animateOutWithFn = function(fn, callback) {
+			fn(element, callback);
 		};
 	};
 
