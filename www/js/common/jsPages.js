@@ -133,26 +133,20 @@
 				}
 
 				var main = document.getElementById(MAIN_ID);
-				while (main.firstChild) {
+				while (!!main.firstChild) {
 					main.removeChild(main.firstChild);
 				}
 
-				var parser = new DOMParser();
-				var newPage = parser.parseFromString(newPageContent, "text/html");
-				var newPageEls = newPage.body.getElementsByTagName("*");
-				var contentWrapper = document.createElement("div");
-				while (newPageEls.length > 0) {
-					var el = newPageEls.item(0);
-					contentWrapper.appendChild(el);
-				}
+				var newPage = document.createElement("div");
+				newPage.innerHTML = newPageContent;
 
 				// Add to page
-				main.appendChild(contentWrapper);
-				jsPages.Utility.setElementLinks(contentWrapper);
-				nextPage.animateOpen(contentWrapper);
+				main.appendChild(newPage);
+				jsPages.Utility.setElementLinks(newPage);
+				nextPage.animateOpen(newPage);
 
 				// Handle imbedded javascript
-				var jsEls = contentWrapper.getElementsByTagName('script');
+				var jsEls = newPage.getElementsByTagName('script');
 				while (jsEls.length > 0) {
 					var jsNode = jsEls.item(0);
 					var newJsEl = document.createElement("script");
@@ -161,22 +155,21 @@
 					} else {
 						newJsEl.text = jsNode.textContent;
 					}
-					contentWrapper.removeChild(jsNode); // Removes from jsEls
+					newPage.removeChild(jsNode); // Removes from jsEls
 					document.head.appendChild(newJsEl); // Executes script
 					document.head.removeChild(newJsEl); // Clean up
 				}
 			};
 
 			// Load page
-			$.ajax(
-					jsPages.Utility.getFullUrl(nextPage) + "?time=" + Date.now(),
-					{
-						success: function(data) {
-							newPageContent__ = data;
-							completeTransition(isOldPageClosed__, newPageContent__);
-						}
-					}
-			);
+			$.ajax({
+				type: 'GET',
+				url: jsPages.Utility.getFullUrl(nextPage) + "?time=" + Date.now(),
+				success: function(xmlData) {
+					newPageContent__ = xmlData;
+					completeTransition(isOldPageClosed__, newPageContent__);
+				}
+			});
 
 			// Close old page
 			if (!!this.currentPage_ && !!this.currentPageNode_) {
