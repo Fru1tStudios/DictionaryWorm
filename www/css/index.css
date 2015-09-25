@@ -89,6 +89,8 @@ body {
         height: 100%;
         display: inline-block;
         vertical-align: middle; }
+      .gameboard.play-area .column > div.selected {
+        background-color: #333; }
     .gameboard.play-area .column:nth-child(odd) {
       height: 99%;
       border-left: 1px solid #003757;

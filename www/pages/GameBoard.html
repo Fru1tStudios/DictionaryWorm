@@ -1,116 +1,25 @@
 
 <div class="gameboard header">
 hi
+	<div id="gameboard-word"></div>
+	<div id="gameboard-score"></div>
 </div>
 <div class="gameboard play-area">
 	<div class="padding"></div>
 
-	<!-- Column 1 -->
-	<div class="column">
-		<div>10</div>
-		<div>9</div>
-		<div>8</div>
-		<div>7</div>
-		<div>6</div>
-		<div>5</div>
-		<div>4</div>
-		<div>3</div>
-		<div>2</div>
-		<div>1</div>
-	</div>
-
-	<!-- Column 2 -->
-	<div class="column">
-		<div>I</div>
-		<div>J</div>
-		<div>K</div>
-		<div>L</div>
-		<div>M</div>
-		<div>N</div>
-		<div>O</div>
-		<div>P</div>
-		<div>Q</div>
-	</div>
-
-	<!-- Column 3 -->
-	<div class="column">
-		<div>A</div>
-		<div>B</div>
-		<div>C</div>
-		<div>D</div>
-		<div>E</div>
-		<div>F</div>
-		<div>G</div>
-		<div>H</div>
-	</div>
-
-	<!-- Column 4 -->
-	<div class="column">
-		<div>I</div>
-		<div>J</div>
-		<div>K</div>
-		<div>L</div>
-		<div>M</div>
-		<div>N</div>
-		<div>O</div>
-		<div>P</div>
-		<div>Q</div>
-	</div>
-
-	<!-- Column 5 -->
-	<div class="column">
-		<div>A</div>
-		<div>B</div>
-		<div>C</div>
-		<div>D</div>
-		<div>E</div>
-		<div>F</div>
-		<div>G</div>
-		<div>H</div>
-	</div>
-
-	<!-- Column 6 -->
-	<div class="column">
-		<div>I</div>
-		<div>J</div>
-		<div>K</div>
-		<div>L</div>
-		<div>M</div>
-		<div>N</div>
-		<div>O</div>
-		<div>P</div>
-		<div>Q</div>
-	</div>
-
-	<!-- Column 7 -->
-	<div class="column">
-		<div>A</div>
-		<div>B</div>
-		<div>C</div>
-		<div>D</div>
-		<div>E</div>
-		<div>F</div>
-		<div>G</div>
-		<div>H</div>
-	</div>
+	<div class="column" data-length="short" data-column="1"> </div>
+	<div class="column" data-length="long" data-column="2"></div>
+	<div class="column" data-length="short" data-column="3"></div>
+	<div class="column" data-length="long" data-column="4"></div>
+	<div class="column" data-length="short" data-column="5"></div>
+	<div class="column" data-length="long" data-column="6"></div>
+	<div class="column" data-length="short" data-column="7"></div>
 
 	<div class="padding"></div>
 </div>
 
 <script type="text/javascript">
 	(function() {
-		var columns = document.getElementsByClassName('column');
-		for (var i = 0; i < columns.length; i++) {
-			columns[i].scrollTop = 999999999;
-		}
-
-		var tiles = document.querySelectorAll(".column div");
-		for (var i = 0; i < tiles.length; i++) {
-			tiles.item(i).addEventListener('click', function() {
-				var column = this.parentNode;
-				column.removeChild(this);
-				column.insertBefore(this, column.firstChild);
-			});
-		}
+		new GameBoard.Logic();
 	} ());
 </script>

@@ -216,8 +216,7 @@
 		 * @param {!HTMLElement} element The element to process.
 		 */
 		setElementLinks: function(element) {
-			//noinspection JSUnresolvedFunction
-			var linkEls = element.getElementsByClassName(JS_PAGES_CLASS);
+			var linkEls = (/** @type {Element} */ element).getElementsByClassName(JS_PAGES_CLASS);
 			for (var i = 0; i < linkEls.length; i++) {
 				linkEls.item(i).addEventListener('click', function() {
 					jsPages.Manager.open(this.dataset[DATA_NAME]);
