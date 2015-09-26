@@ -82,7 +82,10 @@ body {
     .gameboard.play-area .column > div {
       text-align: center;
       vertical-align: middle;
-      border-top: 1px solid #003757; }
+      border-top: 1px solid #003757;
+      -webkit-transition: opacity 0.3s cubic-bezier(0.3, 0.3, 0.02, 1), height 0.3s cubic-bezier(0.3, 0.3, 0.02, 1);
+      -moz-transition: opacity 0.3s cubic-bezier(0.3, 0.3, 0.02, 1), height 0.3s cubic-bezier(0.3, 0.3, 0.02, 1);
+      transition: opacity 0.3s cubic-bezier(0.3, 0.3, 0.02, 1), height 0.3s cubic-bezier(0.3, 0.3, 0.02, 1); }
       .gameboard.play-area .column > div::before {
         content: '';
         width: 0;
@@ -91,6 +94,9 @@ body {
         vertical-align: middle; }
       .gameboard.play-area .column > div.selected {
         background-color: #333; }
+      .gameboard.play-area .column > div.animate-out {
+        opacity: 0;
+        height: 0 !important; }
     .gameboard.play-area .column:nth-child(odd) {
       height: 99%;
       border-left: 1px solid #003757;

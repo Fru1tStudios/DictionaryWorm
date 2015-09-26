@@ -38,6 +38,10 @@ $gameboard-tile-font-size: 16px;
 				vertical-align: middle;
 				border-top: 1px solid $default-border-color;
 
+				@include transition(
+								opacity $animation-time-responsive $animation-style,
+								height $animation-time-responsive $animation-style);
+
 				&::before {
 					content: '';
 					width: 0;
@@ -48,6 +52,11 @@ $gameboard-tile-font-size: 16px;
 
 				&.selected {
 					background-color: #333;
+				}
+
+				&.animate-out {
+					opacity: 0;
+					height: 0 !important;
 				}
 			}
 

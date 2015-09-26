@@ -1,4 +1,5 @@
 (function() {
+	const TILE_ANIMATE_OUT_CLASS = "animate-out";
 	const TILE_SELECTED_CLASS = "selected";
 	const TILE_DATA_ROW_KEY = "tilerow";
 	const TILE_DATA_LAST_SELECTED_KEY = "timeselected";
@@ -78,57 +79,8 @@
 	};
 
 	/**
-	 * Represents a gameboard column. Each column holds either 8 or 9 tiles depending on its
-	 * position. This object provides utilities to add and remove tiles within the column that's
-	 * represented by this object.
-	 *
-	 * @param {!HTMLElement} element The DOM element column.
-	 * @constructor
-	 */
-	GameBoard.Column = function(element) {
-		/** @type {!HTMLElement} The element that represents this column */
-		this.element_ = element;
-		/** @type {!HTMLElement[]} The tiles within this column */
-		this.tiles_ = [];
-
-		/**
-		 * Adds the given tile to the top of this column.
-		 *
-		 * @param {!HTMLElement} tile The tile to add to this column.
-		 */
-		this.add = function(tile) {
-			tile.dataset[TILE_DATA_ROW_KEY] = this.element_.children.length;
-			(this.element_.children.length == 0)
-					? this.element_.appendChild(tile)
-					: this.element_.insertBefore(tile, this.element_.firstChild);
-			this.tiles_.push(tile);
-		};
-
-		/**
-		 * Creates a tile with the given letter and adds it to this column.
-		 *
-		 * @param {!String} letter The letter to add
-		 */
-		this.createAndAdd = function(letter) {
-			var tile = document.createElement("div");
-			tile.innerHTML = letter;
-			this.add(tile);
-		};
-
-		/**
-		 * Removes the given tile from this column, but doesn't refactor the column's tiles yet.
-		 * This should be used if multiple tiles are removed from the column
-		 * @param tile
-		 */
-		this.remove = function(tile) {
-
-		};
-	};
-
-	/**
 	 * Provides utility methods for Tiles.
 	 *
-	 * @type {{select: GameBoard.TileUtil.select, deselect: GameBoard.TileUtil.deselect, getRow: GameBoard.TileUtil.getRow, getColumn: GameBoard.TileUtil.getColumn, isInShortColumn: GameBoard.TileUtil.isInShortColumn, areAdjacent: GameBoard.TileUtil.areAdjacent}}
 	 */
 	GameBoard.TileUtil = {
 		/**
@@ -151,6 +103,27 @@
 			if (tile.classList.contains(TILE_SELECTED_CLASS)) {
 				tile.classList.remove(TILE_SELECTED_CLASS);
 			}
+		},
+
+		/**
+		 * Animates the given tile out of the field.
+		 *
+		 * @param {!HTMLElement} tile The tile to animate out.
+		 * @param {function()} callback
+		 */
+		animateOut: function(tile, callback) {
+			tile.classList.add(TILE_ANIMATE_OUT_CLASS);
+			setTimeout(callback, Constants.CSS_ANIMATE_TIME_RESPONSIVE);
+		},
+
+		/**
+		 * Returns if the passed tile is selected.
+		 *
+		 * @param {!HTMLElement} tile.
+		 * @return {!boolean} If the passed tile is selected.
+		 */
+		isSelected: function(tile) {
+			return tile.classList.contains(TILE_SELECTED_CLASS);
 		},
 
 		/**
@@ -209,8 +182,8 @@
 				return (Math.abs(this.getRow(tile1) - this.getRow(tile2)) == 1);
 			}
 
-			var tile1Row = this.getRow(tile1);
-			var tile2Row = this.getRow(tile2);
+			var tile1Row = parseInt(this.getRow(tile1));
+			var tile2Row = parseInt(this.getRow(tile2));
 
 			// Tile1 in short column, so tile 2 must be same number or below
 			if (this.isInShortColumn(tile1)) {
@@ -223,33 +196,143 @@
 	};
 
 	/**
+	 * Represents a gameboard column. Each column holds either 8 or 9 tiles depending on its
+	 * position. This object provides utilities to add and remove tiles within the column that's
+	 * represented by this object.
+	 *
+	 * @param {!HTMLElement} element The DOM element column.
+	 * @class
+	 */
+	GameBoard.Column = function(element) {
+		/** @type {!HTMLElement} The element that represents this column */
+		this.element_ = element;
+		/** @type {!HTMLElement[]} The tiles within this column */
+		this.tiles_ = [];
+
+		/**
+		 * Adds the given tile to the top of this column.
+		 *
+		 * @param {!HTMLElement} tile The tile to add to this column.
+		 */
+		this.add = function(tile) {
+			tile.dataset[TILE_DATA_ROW_KEY] = this.element_.children.length;
+			tile.addEventListener(
+					'click', function() { GameBoard.Game.tileClickEventHandler(this); });
+			(this.element_.children.length == 0)
+					? this.element_.appendChild(tile)
+					: this.element_.insertBefore(tile, this.element_.firstChild);
+			this.tiles_.push(tile);
+		};
+
+		/**
+		 * Creates a tile with the given letter and adds it to this column.
+		 *
+		 * @param {!String} letter The letter to add
+		 */
+		this.addLetter = function(letter) {
+			var tile = document.createElement("div");
+			tile.innerHTML = letter;
+			this.add(tile);
+		};
+
+		/**
+		 * Removes the given tile from this column, but doesn't refactor the column's tiles yet.
+		 * This should be used if multiple tiles are removed from the column
+		 * @param tile
+		 */
+		this.remove = function(tile) {
+			//GameBoard.TileUtil.animateOut(tile);
+
+		};
+
+		/**
+		 * Clears this column.
+		 */
+		this.reset = function() {
+			while (this.element_.firstChild) {
+				this.element_.removeChild(this.element_.firstChild);
+			}
+			this.tiles_ = [];
+		};
+	};
+
+	/**
 	 * Represents the logic for a Game.
 	 *
-	 * @constructor
+	 * @class
 	 */
 	GameBoard.Logic = function() {
 		// Begin constructor
 		/** @type {!GameBoard.Column[]} */
 		this.columns_ = [];
 		/** @type {!HTMLElement} */
-		this.gameboardScore = document.getElementById(WORD_SCORE_EL_ID);
+		this.gameboardScore_ = document.getElementById(WORD_SCORE_EL_ID);
 		/** @type {!HTMLElement} */
-		this.gameboardWord = document.getElementById(WORD_EL_ID);
+		this.gameboardWord_ = document.getElementById(WORD_EL_ID);
 		/** @type {!HTMLElement[]} */
 		this.currentPath_ = [];
 		// End constructor
 
-		var columns = document.getElementsByClassName(COL_CLASS_NAME);
-		assert(columns.length == 7, "Didn't find 7 columns when creating the game board.");
-		for (var i = 0; i < columns.length; i++) {
-			this.columns_[i] = new GameBoard.Column(columns[i]);
-			var lettersToMake = (columns[i].dataset[COL_DATA_LENGTH_KEY] == LENGTH_LONG) ? 9 : 8;
-			for (var j = 0; j < lettersToMake; j++) {
-				this.columns_[i].createAndAdd(GameBoard.LetterUtil.getNewLetter())
+		/**
+		 * Resets the game board, producing a new set of tiles within each column.
+		 */
+		this.reset = function() {
+			var columns = document.getElementsByClassName(COL_CLASS_NAME);
+			assert(columns.length == 7, "Didn't find 7 columns when creating the game board.");
+			for (var i = 0; i < columns.length; i++) {
+				this.columns_[i] = new GameBoard.Column(columns[i]);
+
+				var lettersToMake = (columns[i].dataset[COL_DATA_LENGTH_KEY] == LENGTH_LONG) ? 9 : 8;
+				for (var j = 0; j < lettersToMake; j++) {
+					this.columns_[i].addLetter(GameBoard.LetterUtil.getNewLetter())
+				}
 			}
-		}
+		};
+		this.reset();
+
+		/**
+		 * Handles the business end of a tile being clicked on. Should be called every tile click.
+		 *
+		 * @param {!HTMLElement} tile The tile that was clicked.
+		 */
+		this.handleTileClick = function(tile) {
+			if (GameBoard.TileUtil.isSelected(tile)) {
+				var tilesToRemove = [];
+				for (var i = 0; i < this.currentPath_.length; i++) {
+					if (this.currentPath_[i].isEqualNode(tile)) {
+						tilesToRemove = this.currentPath_.splice(i);
+					}
+				}
+				tilesToRemove.forEach(function(tile) {
+					GameBoard.TileUtil.deselect(tile);
+				});
+			} else {
+				if (this.currentPath_.length == 0
+						|| GameBoard.TileUtil.areAdjacent(
+								this.currentPath_[this.currentPath_.length - 1],
+								tile)) {
+					this.currentPath_.push(tile);
+					GameBoard.TileUtil.select(tile);
+				}
+			}
+		};
 	};
 
+	/**
+	 * Entry methods for DictionaryWorm games
+	 */
+	GameBoard.Game = {
+		/** @type {?GameBoard.Logic} */
+		logicInstance_: null,
+
+		newGame: function() {
+			this.logicInstance_ = new GameBoard.Logic();
+		},
+
+		tileClickEventHandler: function(tile) {
+			this.logicInstance_.handleTileClick(tile);
+		}
+	};
 
 	window.GameBoard = GameBoard;
 } ());
