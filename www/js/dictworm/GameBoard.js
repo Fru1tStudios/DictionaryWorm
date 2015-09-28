@@ -1,4 +1,8 @@
 (function() {
+	const DOUBLE_TAP_SUBMIT_TIME = 350;
+
+	const MINIMUM_WORD_LENGTH = 3;
+
 	const TILE_ANIMATE_OUT_CLASS = "animate-out";
 	const TILE_SELECTED_CLASS = "selected";
 	const TILE_DATA_ROW_KEY = "tilerow";
@@ -12,41 +16,42 @@
 
 	const WORD_EL_ID = "gameboard-word";
 	const WORD_SCORE_EL_ID = "gameboard-score";
+	const WORD_TOTAL_SCORE_EL_ID = "gameboard-total-score";
 
 	var GameBoard = {};
 
 	/**
-	 * Contains the distribution of letter frequency in the english language.
+	 * Contains the distribution of letters as well as each letter value.
 	 *
-	 * @type {{ A: number, B: number, C: number, D: number, E: number, F: number, G: number, H: number, I: number, J: number, K: number, L: number, M: number, N: number, O: number, P: number, Qu: number, R: number, S: number, T: number, U: number, V: number, W: number, X: number, Y: number, Z: number}}
+	 * @type {{A: {frequency: number, points: number}, B: {frequency: number, points: number}, C: {frequency: number, points: number}, D: {frequency: number, points: number}, E: {frequency: number, points: number}, F: {frequency: number, points: number}, G: {frequency: number, points: number}, H: {frequency: number, points: number}, I: {frequency: number, points: number}, J: {frequency: number, points: number}, K: {frequency: number, points: number}, L: {frequency: number, points: number}, M: {frequency: number, points: number}, N: {frequency: number, points: number}, O: {frequency: number, points: number}, P: {frequency: number, points: number}, Qu: {frequency: number, points: number}, R: {frequency: number, points: number}, S: {frequency: number, points: number}, T: {frequency: number, points: number}, U: {frequency: number, points: number}, V: {frequency: number, points: number}, W: {frequency: number, points: number}, X: {frequency: number, points: number}, Y: {frequency: number, points: number}, Z: {frequency: number, points: number}}}
 	 */
 	GameBoard.Letter = {
-		A: 8.167,
-		B: 1.492,
-		C: 2.782,
-		D: 4.253,
-		E: 12.702,
-		F: 2.228,
-		G: 2.015,
-		H: 6.094,
-		I: 6.966,
-		J: 0.153,
-		K: 0.772,
-		L: 4.025,
-		M: 2.406,
-		N: 6.749,
-		O: 7.507,
-		P: 1.929,
-		Qu: 0.095,
-		R: 5.987,
-		S: 6.327,
-		T: 9.056,
-		U: 2.758,
-		V: 0.978,
-		W: 2.361,
-		X: 0.150,
-		Y: 1.974,
-		Z: 0.074
+		A: { frequency: 8.167, points: 1 },
+		B: { frequency: 1.492, points: 3 },
+		C: { frequency: 2.782, points: 3 },
+		D: { frequency: 4.253, points: 2 },
+		E: { frequency: 12.702, points: 1 },
+		F: { frequency: 2.228, points: 4 },
+		G: { frequency: 2.015, points: 2 },
+		H: { frequency: 6.094, points: 4 },
+		I: { frequency: 6.966, points: 1 },
+		J: { frequency: 0.153, points: 8 },
+		K: { frequency: 0.772, points: 5 },
+		L: { frequency: 4.025, points: 1 },
+		M: { frequency: 2.406, points: 3 },
+		N: { frequency: 6.749, points: 1 },
+		O: { frequency: 7.507, points: 1 },
+		P: { frequency: 1.929, points: 3 },
+		Qu: { frequency: 0.095, points: 11 },
+		R: { frequency: 5.987, points: 1 },
+		S: { frequency: 6.327, points: 1 },
+		T: { frequency: 9.056, points: 1 },
+		U: { frequency: 2.758, points: 1 },
+		V: { frequency: 0.978, points: 4 },
+		W: { frequency: 2.361, points: 4 },
+		X: { frequency: 0.150, points: 8 },
+		Y: { frequency: 1.974, points: 4 },
+		Z: { frequency: 0.074, points: 10 }
 	};
 
 	/**
@@ -68,7 +73,7 @@
 					continue;
 				}
 
-				rollingValue += GameBoard.Letter[key];
+				rollingValue += GameBoard.Letter[key].frequency;
 				if (rollingValue > rand) {
 					return key;
 				}
@@ -109,11 +114,13 @@
 		 * Animates the given tile out of the field.
 		 *
 		 * @param {!HTMLElement} tile The tile to animate out.
-		 * @param {function()} callback
+		 * @param {?function()} [callback]
 		 */
 		animateOut: function(tile, callback) {
 			tile.classList.add(TILE_ANIMATE_OUT_CLASS);
-			setTimeout(callback, Constants.CSS_ANIMATE_TIME_RESPONSIVE);
+			if (!!callback) {
+				setTimeout(callback, Constants.CSS_ANIMATE_TIME_RESPONSIVE);
+			}
 		},
 
 		/**
@@ -236,13 +243,20 @@
 		};
 
 		/**
-		 * Removes the given tile from this column, but doesn't refactor the column's tiles yet.
-		 * This should be used if multiple tiles are removed from the column
-		 * @param tile
+		 * Removes the given tile from this column.
+		 *
+		 * @param {!HTMLElement} tile
 		 */
 		this.remove = function(tile) {
-			//GameBoard.TileUtil.animateOut(tile);
+			GameBoard.TileUtil.animateOut(tile);
+			// TODO(note): This is potentially unsupported.
+			var tileIndex = this.tiles_.indexOf(tile);
+			this.element_.removeChild(this.tiles_[tileIndex]);
+			this.tiles_.splice(tileIndex, 1);
 
+			for (var i = tileIndex; i < this.tiles_.length; i++) {
+				this.tiles_[i].dataset[TILE_DATA_ROW_KEY] = i;
+			}
 		};
 
 		/**
@@ -266,11 +280,15 @@
 		/** @type {!GameBoard.Column[]} */
 		this.columns_ = [];
 		/** @type {!HTMLElement} */
-		this.gameboardScore_ = document.getElementById(WORD_SCORE_EL_ID);
+		this.gameboardScoreElement_ = document.getElementById(WORD_SCORE_EL_ID);
 		/** @type {!HTMLElement} */
-		this.gameboardWord_ = document.getElementById(WORD_EL_ID);
+		this.gameboardWordElement_ = document.getElementById(WORD_EL_ID);
+		/** @type {!HTMLElement} */
+		this.gameboardTotalScoreElement_ = document.getElementById(WORD_TOTAL_SCORE_EL_ID);
 		/** @type {!HTMLElement[]} */
 		this.currentPath_ = [];
+		/** @type {!number} */
+		this.gameScore_ = 0;
 		// End constructor
 
 		/**
@@ -291,30 +309,111 @@
 		this.reset();
 
 		/**
+		 * Returns if the given parameter is a valid English word.
+		 *
+		 * @param {!String} word
+		 * @returns {!boolean} If the given parameter is a valid English word.
+		 */
+		this.isValidWord = function(word) {
+			return true;
+		};
+
+		/**
+		 * Handles an attempt at submitting a word.
+		 *
+		 * @returns {!boolean}
+		 * @private
+		 */
+		this.handleWordSubmit_ = function() {
+			// Calculate result and score
+			var word = "";
+			var score = 0;
+			var currentLetter = "";
+			for (var i = 0; i < this.currentPath_.length; i++) {
+				currentLetter = this.currentPath_[i].innerHTML.toUpperCase();
+				score += GameBoard.Letter[currentLetter].points;
+				word += currentLetter;
+			}
+
+			// Check validity
+			if (!this.isValidWord(word)) {
+				// TODO(v1): Update message
+				GameBoard.Game.showError("Invalid word");
+				return false;
+			}
+
+			// Add score
+			this.gameScore_ += score;
+			this.gameboardTotalScoreElement_.innerHTML = this.gameScore_.toString();
+
+			// Remove from game board + add new letters
+			var tileCol = -1;
+			for (var i = 0; i < this.currentPath_.length; i++) {
+				tileCol = GameBoard.TileUtil.getColumn(this.currentPath_[i]);
+				this.columns_[tileCol].addLetter(GameBoard.LetterUtil.getNewLetter());
+				this.columns_[tileCol].remove(this.currentPath_[i]);
+			}
+
+			// Finally, remove from current path
+			this.currentPath_ = [];
+
+			return true;
+		};
+
+		/**
 		 * Handles the business end of a tile being clicked on. Should be called every tile click.
 		 *
 		 * @param {!HTMLElement} tile The tile that was clicked.
 		 */
 		this.handleTileClick = function(tile) {
-			if (GameBoard.TileUtil.isSelected(tile)) {
-				var tilesToRemove = [];
-				for (var i = 0; i < this.currentPath_.length; i++) {
-					if (this.currentPath_[i].isEqualNode(tile)) {
-						tilesToRemove = this.currentPath_.splice(i);
-					}
-				}
-				tilesToRemove.forEach(function(tile) {
-					GameBoard.TileUtil.deselect(tile);
-				});
-			} else {
+			var justSelected = false;
+			// Select if not selected
+			if (!GameBoard.TileUtil.isSelected(tile)) {
+				// Tile is current not selected and needs to be selected.
 				if (this.currentPath_.length == 0
 						|| GameBoard.TileUtil.areAdjacent(
-								this.currentPath_[this.currentPath_.length - 1],
-								tile)) {
+								this.currentPath_[this.currentPath_.length - 1], tile)) {
 					this.currentPath_.push(tile);
 					GameBoard.TileUtil.select(tile);
+					justSelected = true;
+				} else {
+					return;
 				}
 			}
+
+			// TODO(note): Use of .indexOf
+			var tileIndexInPath = this.currentPath_.indexOf(tile);
+
+			// Check if double clicked
+			if (!!tile.dataset[TILE_DATA_LAST_SELECTED_KEY]
+					&& this.currentPath_.length >= MINIMUM_WORD_LENGTH
+					&& (tileIndexInPath == -1 || tileIndexInPath == this.currentPath_.length - 1)
+					&& Date.now() - parseInt(tile.dataset[TILE_DATA_LAST_SELECTED_KEY])
+							< DOUBLE_TAP_SUBMIT_TIME) {
+				if (!this.handleWordSubmit_()) {
+					return;
+				}
+			}
+
+			tile.dataset[TILE_DATA_LAST_SELECTED_KEY] = Date.now();
+			if (GameBoard.TileUtil.isSelected(tile) && !justSelected) {
+				// Tile is currently selected and needs to be deselected
+				var tilesToRemove = this.currentPath_.splice(tileIndexInPath);
+				tilesToRemove.forEach(function (tile) {
+					GameBoard.TileUtil.deselect(tile);
+				});
+			}
+
+			var word = "";
+			var score = 0;
+			var currentLetter = "";
+			for (var i = 0; i < this.currentPath_.length; i++) {
+				currentLetter = this.currentPath_[i].innerHTML.toUpperCase();
+				score += GameBoard.Letter[currentLetter].points;
+				word += currentLetter;
+			}
+			this.gameboardWordElement_.innerHTML = word;
+			this.gameboardScoreElement_.innerHTML = score.toString();
 		};
 	};
 
@@ -331,6 +430,11 @@
 
 		tileClickEventHandler: function(tile) {
 			this.logicInstance_.handleTileClick(tile);
+		},
+
+		showError: function(error) {
+			// TODO(v1): Implement better ui for errors
+			alert(error);
 		}
 	};
 
