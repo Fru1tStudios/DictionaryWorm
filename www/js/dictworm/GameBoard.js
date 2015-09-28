@@ -21,6 +21,21 @@
 	var GameBoard = {};
 
 	/**
+	 * Contains every valid English word for the game.
+	 */
+	GameBoard.Dictionary = {};
+	$.ajax({
+		url: 'assets/dictionary.txt',
+		dataType: 'text',
+		success: function(data) {
+			var words = data.toString().split("\r\n");
+			words.forEach(function(word) {
+				GameBoard.Dictionary[word] = true;
+			});
+		}
+	});
+
+	/**
 	 * Contains the distribution of letters as well as each letter value.
 	 *
 	 * @type {{A: {frequency: number, points: number}, B: {frequency: number, points: number}, C: {frequency: number, points: number}, D: {frequency: number, points: number}, E: {frequency: number, points: number}, F: {frequency: number, points: number}, G: {frequency: number, points: number}, H: {frequency: number, points: number}, I: {frequency: number, points: number}, J: {frequency: number, points: number}, K: {frequency: number, points: number}, L: {frequency: number, points: number}, M: {frequency: number, points: number}, N: {frequency: number, points: number}, O: {frequency: number, points: number}, P: {frequency: number, points: number}, Qu: {frequency: number, points: number}, R: {frequency: number, points: number}, S: {frequency: number, points: number}, T: {frequency: number, points: number}, U: {frequency: number, points: number}, V: {frequency: number, points: number}, W: {frequency: number, points: number}, X: {frequency: number, points: number}, Y: {frequency: number, points: number}, Z: {frequency: number, points: number}}}
@@ -315,7 +330,7 @@
 		 * @returns {!boolean} If the given parameter is a valid English word.
 		 */
 		this.isValidWord = function(word) {
-			return true;
+			return !!GameBoard.Dictionary[word.toLowerCase()];
 		};
 
 		/**
@@ -338,7 +353,7 @@
 			// Check validity
 			if (!this.isValidWord(word)) {
 				// TODO(v1): Update message
-				GameBoard.Game.showError("Invalid word");
+				GameBoard.Game.showError(word + " isn't a valid word");
 				return false;
 			}
 
@@ -434,7 +449,7 @@
 
 		showError: function(error) {
 			// TODO(v1): Implement better ui for errors
-			alert(error);
+			console.log(error);
 		}
 	};
 
