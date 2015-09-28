@@ -99,3 +99,21 @@ $gameboard-tile-font-size: 16px;
 		}
 	}
 }
+
+#gameboard-total-score-wrapper {
+	font-size: 14px;
+}
+#gameboard-word {
+	@include transition(color $animation-time-responsive $animation-style);
+
+	text-align: center;
+	padding-top: 10px;
+
+	&.valid {
+		color: $default-valid-color;
+	}
+
+	&.invalid {
+		color: $default-invalid-color;
+	}
+}

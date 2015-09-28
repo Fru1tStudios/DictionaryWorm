@@ -18,6 +18,9 @@
 	const WORD_SCORE_EL_ID = "gameboard-score";
 	const WORD_TOTAL_SCORE_EL_ID = "gameboard-total-score";
 
+	const VALID_WORD_CLASS = "valid";
+	const INVALID_WORD_CLASS = "invalid";
+
 	var GameBoard = {};
 
 	/**
@@ -352,8 +355,11 @@
 
 			// Check validity
 			if (!this.isValidWord(word)) {
-				// TODO(v1): Update message
-				GameBoard.Game.showError(word + " isn't a valid word");
+				var self = this;
+				this.gameboardWordElement_.classList.add(INVALID_WORD_CLASS);
+				setTimeout(function() {
+					self.gameboardWordElement_.classList.remove(INVALID_WORD_CLASS);
+				}, Constants.CSS_ANIMATE_TIME_RESPONSIVE);
 				return false;
 			}
 
@@ -405,15 +411,17 @@
 					&& (tileIndexInPath == -1 || tileIndexInPath == this.currentPath_.length - 1)
 					&& Date.now() - parseInt(tile.dataset[TILE_DATA_LAST_SELECTED_KEY])
 							< DOUBLE_TAP_SUBMIT_TIME) {
-				if (!this.handleWordSubmit_()) {
-					return;
-				}
+				this.handleWordSubmit_();
 			}
 
+			// TODO(v1): Wait for possible double tap before removing from chain
 			tile.dataset[TILE_DATA_LAST_SELECTED_KEY] = Date.now();
 			if (GameBoard.TileUtil.isSelected(tile) && !justSelected) {
 				// Tile is currently selected and needs to be deselected
-				var tilesToRemove = this.currentPath_.splice(tileIndexInPath);
+				// If the tile is not last in the chain, don't deselect it
+				var tilesToRemove = this.currentPath_.splice(
+						(tileIndexInPath == this.currentPath_.length - 1)
+								? tileIndexInPath : tileIndexInPath + 1);
 				tilesToRemove.forEach(function (tile) {
 					GameBoard.TileUtil.deselect(tile);
 				});
@@ -423,12 +431,20 @@
 			var score = 0;
 			var currentLetter = "";
 			for (var i = 0; i < this.currentPath_.length; i++) {
-				currentLetter = this.currentPath_[i].innerHTML.toUpperCase();
+				currentLetter = this.currentPath_[i].innerHTML;
 				score += GameBoard.Letter[currentLetter].points;
 				word += currentLetter;
 			}
+
 			this.gameboardWordElement_.innerHTML = word;
-			this.gameboardScoreElement_.innerHTML = score.toString();
+
+			if (this.isValidWord(word)) {
+				this.gameboardWordElement_.classList.add(VALID_WORD_CLASS);
+				this.gameboardScoreElement_.innerHTML = "(" + score.toString() + ")";
+			} else {
+				this.gameboardWordElement_.classList.remove(VALID_WORD_CLASS);
+				this.gameboardScoreElement_.innerHTML = "";
+			}
 		};
 	};
 

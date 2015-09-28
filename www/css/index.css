@@ -45,6 +45,9 @@ body {
   display: inline-block;
   vertical-align: middle; }
 
+.centered {
+  text-align: center; }
+
 .menu.title {
   height: 33%;
   text-align: center; }
@@ -115,6 +118,20 @@ body {
   .gameboard.play-area .padding {
     width: 1%;
     height: 100%; }
+
+#gameboard-total-score-wrapper {
+  font-size: 14px; }
+
+#gameboard-word {
+  -webkit-transition: color 0.3s cubic-bezier(0.3, 0.3, 0.02, 1);
+  -moz-transition: color 0.3s cubic-bezier(0.3, 0.3, 0.02, 1);
+  transition: color 0.3s cubic-bezier(0.3, 0.3, 0.02, 1);
+  text-align: center;
+  padding-top: 10px; }
+  #gameboard-word.valid {
+    color: #3B3; }
+  #gameboard-word.invalid {
+    color: #B33; }
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1 / 1) and (min-width: 400px) {
